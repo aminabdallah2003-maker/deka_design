@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEKA DESIGN — Studio Créatif Lomé, Togo</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  body { background: var(--ink); }
+
+  /* HERO */
+  .hero {
+    min-height: 92vh; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 6rem 2rem 4rem;
+  }
+  .hero-bg-circle { position: absolute; border-radius: 50%; pointer-events: none; }
+  .hero-content { max-width: 860px; text-align: center; position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 99px; padding: 6px 18px; margin-bottom: 2rem;
+  }
+  .hero-badge span { font-size: 0.75rem; color: var(--gold); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 4.8rem);
+    font-weight: 800; color: #fff; line-height: 1.1;
+    margin-bottom: 1.5rem; letter-spacing: -0.02em;
+  }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero-sub {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: rgba(255,255,255,0.5); line-height: 1.8;
+    max-width: 580px; margin: 0 auto 2.5rem;
+  }
+  .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* STATS */
+  .hero-stats {
+    display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap;
+    margin-top: 4rem; padding-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .hero-stat-num { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--gold); }
+  .hero-stat-lbl { font-size: 0.72rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* SECTION COMMUNE */
+  .section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 8px; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; line-height: 1.2; }
+
+  /* WHY CARDS */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-top: 3rem; }
+  .why-card {
+    background: #fff; border-radius: 16px; padding: 1.8rem;
+    border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .why-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+  .why-icon {
+    width: 48px; height: 48px; border-radius: 12px; margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, var(--ink), #3a3826);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .why-icon i { color: var(--gold); font-size: 1.1rem; }
+  .why-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .why-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* FORFAITS */
+  .plans-section { background: var(--ink); }
+  .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-top: 3rem; }
+  .plan-card {
+    border-radius: 16px; padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.2); transition: border-color 0.2s;
+    background: rgba(255,255,255,0.04);
+  }
+  .plan-card:hover { border-color: var(--gold); }
+  .plan-card.featured { background: var(--gold); border-color: var(--gold); position: relative; }
+  .plan-featured-badge {
+    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--gold);
+    font-size: 0.62rem; font-weight: 800;
+    padding: 3px 14px; border-radius: 99px; letter-spacing: 0.1em; white-space: nowrap;
+  }
+  .plan-name { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .plan-price { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+  .plan-features { font-size: 0.85rem; line-height: 2.2; margin-bottom: 1.5rem; }
+
+  /* CTA FINAL */
+  .cta-section { background: var(--surface); }
+</style>
+</head>
+<body>
+
+<!-- Topbar injecté -->
+<div id="topbar-placeholder"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-circle" style="top:-80px; right:-100px; width:500px; height:500px; background:rgba(201,168,76,0.06);"></div>
+  <div class="hero-bg-circle" style="bottom:-120px; left:-80px; width:400px; height:400px; background:rgba(201,168,76,0.04);"></div>
+  <div style="position:absolute; top:30%; left:5%; width:2px; height:100px; background:linear-gradient(to bottom, transparent,var(--gold),transparent); opacity:0.3;"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;"></span>
+      <span>Studio Créatif — Lomé, Togo</span>
+    </div>
+
+    <h1>Votre communication<br>visuelle, <em>réinventée.</em></h1>
+
+    <p class="hero-sub">
+      DEKA DESIGN crée des visuels percutants pour les entreprises togolaises.
+      Posts réseaux sociaux, affiches, logos, identités visuelles. Abonnement mensuel, livraison en 48h.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="services.html" class="btn btn-gold btn-lg">
+        <i class="fa-solid fa-palette"></i> Voir nos services
+      </a>
+      <a href="login.html" class="btn btn-lg" style="background:transparent; border:1.5px solid rgba(255,255,255,0.2); color:#fff; transition:0.2s;"
+         onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'"
+         onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.color='#fff'">
+        <i class="fa-regular fa-user"></i> Mon espace client
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div style="text-align:center;"><div class="hero-stat-num">50+</div><div class="hero-stat-lbl">Clients actifs</div></div>
+      <div style="text-align:center;"><div class="hero-stat-num">500+</div><div class="hero-stat-lbl">Visuels créés</div></div>
+      <div style="text-align:center;"><div class="hero-stat-num">48h</div><div class="hero-stat-lbl">Délai livraison</div></div>
+      <div style="text-align:center;"><div class="hero-stat-num">3</div><div class="hero-stat-lbl">Ans d'expérience</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI DEKA -->
+<section class="section" style="background: var(--surface);">
+  <div class="section-inner">
+    <div style="text-align:center;">
+      <div class="section-tag" style="color:var(--gold-dark);">Pourquoi nous choisir</div>
+      <h2 class="section-title">La création visuelle<br>sans compromis</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon"><i class="fa-solid fa-bolt"></i></div>
+        <h3>Livraison en 48h</h3>
+        <p>Vos visuels livrés en 48h ouvrées, prêts à être publiés. Urgences traitées en 24h sur demande.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fa-solid fa-rotate"></i></div>
+        <h3>Révisions illimitées</h3>
+        <p>On retravaille jusqu'à ce que vous soyez 100% satisfait. Votre satisfaction est notre priorité.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <h3>Abonnement flexible</h3>
+        <p>Choisissez votre pack mensuel selon vos besoins. Résiliable à tout moment, sans engagement.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fa-solid fa-folder-open"></i></div>
+        <h3>Brand Library incluse</h3>
+        <p>Tous vos fichiers finaux sont accessibles dans votre espace client personnel à tout moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORFAITS -->
+<section class="section plans-section">
+  <div class="section-inner">
+    <div style="text-align:center;">
+      <div class="section-tag" style="color:var(--gold);">Nos forfaits</div>
+      <h2 class="section-title" style="color:#fff;">Choisissez votre pack</h2>
+    </div>
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <div class="plan-name" style="color:rgba(255,255,255,0.4);">Essentiel</div>
+        <div class="plan-price" style="color:var(--gold);">75 000 <span style="font-size:0.9rem; font-weight:400; color:rgba(255,255,255,0.35);">FCFA/mois</span></div>
+        <div class="plan-features" style="color:rgba(255,255,255,0.6);">
+          ✓ 5 visuels par mois<br>✓ Révisions incluses<br>✓ Fichiers PNG / PDF<br>✓ Support WhatsApp
+        </div>
+        <a href="login.html" class="btn btn-gold" style="width:100%; justify-content:center;">Démarrer →</a>
+      </div>
+
+      <div class="plan-card featured">
+        <div class="plan-featured-badge">⭐ POPULAIRE</div>
+        <div class="plan-name" style="color:rgba(15,14,12,0.6);">Pro</div>
+        <div class="plan-price" style="color:var(--ink);">135 000 <span style="font-size:0.9rem; font-weight:400; opacity:0.4;">FCFA/mois</span></div>
+        <div class="plan-features" style="color:rgba(15,14,12,0.75);">
+          ✓ 10 visuels prioritaires<br>✓ Tous formats livrés<br>✓ Charte graphique<br>✓ Gestionnaire dédié
+        </div>
+        <a href="login.html" class="btn btn-dark" style="width:100%; justify-content:center;">Choisir ce pack →</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name" style="color:rgba(255,255,255,0.4);">Studio</div>
+        <div class="plan-price" style="color:var(--gold);">250 000 <span style="font-size:0.9rem; font-weight:400; color:rgba(255,255,255,0.35);">FCFA/mois</span></div>
+        <div class="plan-features" style="color:rgba(255,255,255,0.6);">
+          ✓ 20 visuels par mois<br>✓ Identité visuelle<br>✓ Support 7j/7<br>✓ Accès prioritaire
+        </div>
+        <a href="login.html" class="btn btn-gold" style="width:100%; justify-content:center;">Démarrer →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="section cta-section">
+  <div class="section-inner" style="text-align:center;">
+    <h2 class="section-title">Prêt à transformer votre<br>communication visuelle ?</h2>
+    <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.8; max-width:500px; margin:1rem auto 2rem;">
+      Rejoignez les entreprises togolaises qui font confiance à DEKA DESIGN. Premier visuel offert.
+    </p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="services.html" class="btn btn-dark btn-lg">
+        <i class="fa-solid fa-stars"></i> Voir tous nos services
+      </a>
+      <a href="https://wa.me/22890000000" target="_blank" class="btn btn-outline btn-lg"
+         style="transition:0.2s;"
+         onmouseover="this.style.borderColor='#25D366'; this.style.color='#25D366'"
+         onmouseout="this.style.borderColor=''; this.style.color=''">
+        <i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#080807; padding:2rem; text-align:center; border-top:1px solid rgba(201,168,76,0.1);">
+  <div style="font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; color:var(--gold); margin-bottom:4px;">DEKA DESIGN</div>
+  <div style="font-size:0.72rem; color:rgba(255,255,255,0.25);">Studio Créatif · Lomé, Togo · contact@dekadesign.tg</div>
+</footer>
+
+<!-- sql.js + scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script src="../assets/js/topbar.js"></script>
+<script>
+initDB().then(() => injectTopbar('accueil'));
+</script>
+</body>
+</html>

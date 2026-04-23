@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion — DEKA DESIGN</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  body { background: var(--ink); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+
+  .login-wrap {
+    width: 100%; max-width: 440px;
+  }
+
+  /* Logo centré */
+  .login-logo {
+    text-align: center; margin-bottom: 2.5rem;
+  }
+  .login-logo img {
+    width: 80px; height: 80px; border-radius: 50%;
+    object-fit: cover; border: 3px solid rgba(201,168,76,0.5);
+    margin-bottom: 1rem;
+  }
+  .login-logo .name {
+    font-family: 'Poppins', sans-serif; font-size: 1.6rem;
+    font-weight: 800; color: var(--gold);
+    letter-spacing: 0.06em;
+  }
+  .login-logo .sub {
+    font-size: 0.78rem; color: rgba(255,255,255,0.35);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  /* Card login */
+  .login-card {
+    background: #fff; border-radius: 20px;
+    padding: 2.5rem 2rem; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .login-card h2 {
+    font-family: 'Poppins', sans-serif; font-size: 1.3rem;
+    font-weight: 800; margin-bottom: 0.4rem;
+  }
+  .login-card .sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+  /* Tabs client / admin */
+  .login-tabs {
+    display: flex; background: var(--surface2);
+    border-radius: 10px; padding: 4px; gap: 4px;
+    margin-bottom: 1.8rem;
+  }
+  .login-tab {
+    flex: 1; padding: 8px; border-radius: 8px; border: none;
+    font-family: 'Poppins', sans-serif; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
+    background: transparent; color: var(--text-muted);
+  }
+  .login-tab.active { background: var(--ink); color: var(--gold); }
+
+  /* Input wrapper avec icône */
+  .input-wrap { position: relative; }
+  .input-wrap i {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); font-size: 0.85rem;
+  }
+  .input-wrap .form-input { padding-left: 36px; }
+  .input-wrap .toggle-pwd {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 0.85rem;
+  }
+
+  /* Message d'erreur global */
+  .login-error {
+    background: var(--danger-bg); color: var(--danger);
+    border-radius: 10px; padding: 10px 14px;
+    font-size: 0.82rem; margin-bottom: 1rem; display: none;
+  }
+  .login-error.show { display: flex; align-items: center; gap: 8px; }
+
+  /* Comptes démo */
+  .demo-accounts {
+    margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.2rem;
+  }
+  .demo-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
+  .demo-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 8px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface);
+    cursor: pointer; margin-bottom: 5px; transition: 0.15s;
+    font-family: 'Poppins', sans-serif; font-size: 0.8rem;
+  }
+  .demo-btn:hover { border-color: var(--gold); background: #fff; }
+  .demo-btn .dem-name { font-weight: 600; }
+  .demo-btn .dem-email { color: var(--text-muted); font-size: 0.72rem; }
+  .demo-badge {
+    font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+  }
+  .dem-admin { background: var(--warning-bg); color: var(--warning); }
+  .dem-client { background: var(--info-bg); color: var(--info); }
+
+  /* Styling du login en mode clair */
+  body.light-mode {
+    background: #f5f5f5;
+  }
+
+  body.light-mode .login-card {
+    background: var(--ink);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  body.light-mode .login-card h2 {
+    color: #fff;
+  }
+
+  body.light-mode .login-card .sub {
+    color: rgba(255,255,255,0.6);
+  }
+
+  body.light-mode .login-logo .name {
+    color: var(--gold);
+  }
+
+  body.light-mode .login-logo .sub {
+    color: rgba(255,255,255,0.4);
+  }
+
+  body.light-mode .form-input {
+    background: #f5f5f5;
+    color: var(--ink);
+    border-color: rgba(15,14,12,0.15);
+  }
+
+  body.light-mode .form-label {
+    color: rgba(15,14,12,0.6);
+  }
+
+  body.light-mode .login-tabs {
+    background: rgba(15,14,12,0.08);
+  }
+
+  body.light-mode .login-tab {
+    color: rgba(15,14,12,0.6);
+  }
+
+  body.light-mode .login-tab.active {
+    background: var(--ink);
+    color: var(--gold);
+  }
+
+  body.light-mode .demo-btn {
+    background: #f5f5f5;
+    border-color: rgba(15,14,12,0.15);
+  }
+
+  body.light-mode .demo-btn:hover {
+    background: #fff;
+    border-color: var(--gold);
+  }
+
+  /* Lien inscription */
+  .login-footer {
+    text-align: center; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem;
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  .login-footer a {
+    color: var(--gold); font-weight: 600; text-decoration: none;
+  }
+  .login-footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <button id="themeToggleBtn" title="Changer de thème" onclick="toggleTheme()">
+    <i class="fas fa-moon"></i>
+  </button>
+</div>
+
+<div class="login-wrap">
+
+  <!-- Logo -->
+  <div class="login-logo">
+    <img src="../assets/images/logo.png" alt="DK Design" onerror="this.src=''; this.style.display='none'">
+    <div class="name">DEKA</div>
+    <div class="sub">Design Studio · Lomé</div>
+  </div>
+
+  <!-- Card -->
+  <div class="login-card">
+    <h2>Bienvenue 👋</h2>
+    <p class="sub">Connectez-vous à votre espace</p>
+
+    <!-- Tabs -->
+    <div class="login-tabs">
+      <button class="login-tab active" id="tab-client" onclick="setTab('client')">
+        <i class="fa-regular fa-user"></i> Client
+      </button>
+      <button class="login-tab" id="tab-admin" onclick="setTab('admin')">
+        <i class="fa-solid fa-gauge-high"></i> Admin
+      </button>
+    </div>
+
+    <!-- Erreur -->
+    <div class="login-error" id="login-error">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span id="login-error-msg">Email ou mot de passe incorrect.</span>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <div class="input-wrap">
+        <i class="fa-regular fa-envelope"></i>
+        <input class="form-input" id="login-email" type="email" placeholder="votre@email.com" autocomplete="email">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Mot de passe</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-lock"></i>
+        <input class="form-input" id="login-pwd" type="password" placeholder="••••••••" autocomplete="current-password">
+        <button class="toggle-pwd" onclick="togglePwd()" type="button">
+          <i class="fa-regular fa-eye" id="eye-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn-dark btn-lg" style="width:100%; justify-content:center; margin-top:0.5rem;" id="btn-login" onclick="doLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+      <span id="login-spinner" style="display:none;"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+    </button>
+
+    <!-- Comptes démo -->
+    <div class="demo-accounts">
+      <div class="demo-title">Comptes de démonstration — cliquer pour remplir</div>
+
+      <button class="demo-btn" onclick="fillDemo('admin@dekadesign.tg','admin123')">
+        <div><div class="dem-name">Admin DEKA</div><div class="dem-email">admin@dekadesign.tg</div></div>
+        <span class="demo-badge dem-admin">Admin</span>
+      </button>
+      <button class="demo-btn" onclick="fillDemo('ama@boutikelome.tg','password123')">
+        <div><div class="dem-name">Ama Koffi</div><div class="dem-email">ama@boutikelome.tg</div></div>
+        <span class="demo-badge dem-client">Client</span>
+      </button>
+      <button class="demo-btn" onclick="fillDemo('kofi@techafrik.tg','password123')">
+        <div><div class="dem-name">Kofi Mensah</div><div class="dem-email">kofi@techafrik.tg</div></div>
+        <span class="demo-badge dem-client">Client</span>
+      </button>
+    </div>
+
+    <!-- Lien inscription -->
+    <div class="login-footer">
+      Pas encore inscrit ? <a href="inscription.html">Créer un compte</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- sql.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script>
+let currentTab = 'client';
+
+// Init DB puis pré-remplir si déjà connecté
+initDB().then(() => {
+  const s = authGetSession();
+  if (s) {
+    window.location.href = s.role === 'admin' ? 'admin.html' : 'espace-client.html';
+  }
+});
+
+function setTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-client').classList.toggle('active', tab === 'client');
+  document.getElementById('tab-admin').classList.toggle('active', tab === 'admin');
+  // Pré-remplir email selon tab
+  if (tab === 'admin') fillDemo('admin@dekadesign.tg', 'admin123');
+  else { document.getElementById('login-email').value = ''; document.getElementById('login-pwd').value = ''; }
+}
+
+function fillDemo(email, pwd) {
+  document.getElementById('login-email').value = email;
+  document.getElementById('login-pwd').value = pwd;
+  hideError();
+}
+
+function togglePwd() {
+  const input = document.getElementById('login-pwd');
+  const icon  = document.getElementById('eye-icon');
+  if (input.type === 'password') {
+    input.type = 'text'; icon.className = 'fa-regular fa-eye-slash';
+  } else {
+    input.type = 'password'; icon.className = 'fa-regular fa-eye';
+  }
+}
+
+function showError(msg) {
+  document.getElementById('login-error-msg').textContent = msg;
+  document.getElementById('login-error').classList.add('show');
+}
+function hideError() {
+  document.getElementById('login-error').classList.remove('show');
+}
+
+async function doLogin() {
+  hideError();
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+
+  if (!email || !pwd) { showError('Veuillez remplir tous les champs.'); return; }
+
+  // Spinner
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  document.getElementById('login-spinner').style.display = 'inline';
+
+  await new Promise(r => setTimeout(r, 600)); // petit délai visuel
+
+  const result = authLogin(email, pwd);
+
+  btn.disabled = false;
+  document.getElementById('login-spinner').style.display = 'none';
+
+  if (!result.success) {
+    showError(result.error);
+    return;
+  }
+
+  // Rediriger selon rôle
+  if (result.session.role === 'admin') {
+    window.location.href = 'admin.html';
+  } else {
+    window.location.href = 'espace-client.html';
+  }
+}
+
+// Enter pour valider
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('login-pwd').addEventListener('keypress', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+</script>
+<!-- Script de gestion du thème global -->
+<script src="../assets/js/theme.js"></script>
+</body>
+</html>

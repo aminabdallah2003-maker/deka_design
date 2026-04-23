@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Profil — DEKA DESIGN</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div id="topbar-placeholder"></div>
+<div id="toast"></div>
+
+<main class="page-wrapper" style="max-width:600px;">
+
+  <div class="page-header">
+    <h1>Mon Profil</h1>
+    <a href="espace-client.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+  </div>
+
+  <!-- Avatar + nom -->
+  <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; padding:1.5rem; background:#fff; border-radius:16px; border:1px solid var(--border);">
+    <div style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:var(--ink);" id="avatar-big">?</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800;" id="profil-display-nom">—</div>
+      <div style="font-size:0.8rem; color:var(--text-muted);" id="profil-display-email">—</div>
+      <div style="font-size:0.72rem; margin-top:4px;">
+        <span style="background:var(--info-bg); color:var(--info); padding:2px 10px; border-radius:99px; font-weight:700;" id="profil-display-forfait">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="card">
+    <div class="card-title"><i class="fa-solid fa-pen"></i> Informations personnelles</div>
+
+    <div class="form-group">
+      <label class="form-label">Nom complet</label>
+      <input class="form-input" id="p-nom" type="text">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="p-email" type="email" readonly style="opacity:0.6; cursor:not-allowed;" title="L'email ne peut pas être modifié ici">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Téléphone / WhatsApp</label>
+      <input class="form-input" id="p-tel" type="tel" placeholder="+228 90 00 00 00">
+    </div>
+
+    <hr style="border:none; border-top:1px solid var(--border); margin:1.2rem 0;">
+
+    <div class="card-title" style="margin-bottom:0.8rem;"><i class="fa-solid fa-lock"></i> Changer le mot de passe</div>
+    <div class="form-group">
+      <label class="form-label">Nouveau mot de passe</label>
+      <input class="form-input" id="p-pwd" type="password" placeholder="Laisser vide pour ne pas changer">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirmer</label>
+      <input class="form-input" id="p-pwd2" type="password" placeholder="Répéter le nouveau mot de passe">
+    </div>
+
+    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:0.5rem;">
+      <a href="espace-client.html" class="btn btn-outline">Annuler</a>
+      <button class="btn btn-gold" onclick="saveProfil()"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button>
+    </div>
+  </div>
+
+  <!-- Forfait actuel -->
+  <div class="card" style="margin-top:1.2rem;">
+    <div class="card-title"><i class="fa-solid fa-layer-group"></i> Mon Forfait</div>
+    <div id="forfait-info" style="font-size:0.88rem; color:var(--text-muted);">Chargement…</div>
+  </div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script src="../assets/js/topbar.js"></script>
+<script>
+let SESSION, CLIENT;
+
+initDB().then(() => {
+  SESSION = authRequire('client');
+  if (!SESSION) return;
+  injectTopbar('client');
+  CLIENT = getClientByUserId(SESSION.userId);
+  if (!CLIENT) return;
+  loadProfil();
+});
+
+function loadProfil() {
+  const initials = CLIENT.nom.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+  document.getElementById('avatar-big').textContent           = initials;
+  document.getElementById('profil-display-nom').textContent   = CLIENT.nom;
+  document.getElementById('profil-display-email').textContent = CLIENT.email;
+  document.getElementById('profil-display-forfait').textContent = CLIENT.forfait_nom;
+  document.getElementById('p-nom').value   = CLIENT.nom;
+  document.getElementById('p-email').value = CLIENT.email;
+  document.getElementById('p-tel').value   = CLIENT.tel || '';
+
+  const pct = Math.round((CLIENT.visuels_used / CLIENT.forfait_visuels) * 100);
+  document.getElementById('forfait-info').innerHTML = `
+    <div style="margin-bottom:8px;"><strong>${CLIENT.forfait_nom}</strong> — ${CLIENT.visuels_used} / ${CLIENT.forfait_visuels} visuels utilisés ce mois</div>
+    <div class="progress-track" style="height:8px;"><div class="progress-fill ${pct>=90?'danger':pct>=70?'warning':''}" style="width:${pct}%;"></div></div>
+    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:5px;">${CLIENT.forfait_visuels - CLIENT.visuels_used} visuel(s) restant(s) — Renouvellement le 1er du mois</div>
+  `;
+}
+
+function saveProfil() {
+  const nom  = document.getElementById('p-nom').value.trim();
+  const tel  = document.getElementById('p-tel').value.trim();
+  const pwd  = document.getElementById('p-pwd').value;
+  const pwd2 = document.getElementById('p-pwd2').value;
+
+  if (!nom) { showToast('⚠️ Le nom est requis'); return; }
+  if (pwd && pwd !== pwd2) { showToast('⚠️ Les mots de passe ne correspondent pas'); return; }
+
+  dbRun('UPDATE users SET nom = ?, tel = ? WHERE id = ?', [nom, tel || null, SESSION.userId]);
+  if (pwd) dbRun('UPDATE users SET password = ? WHERE id = ?', [pwd, SESSION.userId]);
+
+  // Mettre à jour la session
+  SESSION.nom = nom;
+  SESSION.tel = tel;
+  localStorage.setItem('dekaSession', JSON.stringify(SESSION));
+
+  CLIENT.nom = nom;
+  CLIENT.tel = tel;
+  loadProfil();
+  showToast('✅ Profil mis à jour avec succès !');
+}
+</script>
+</body>
+</html>

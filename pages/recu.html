@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reçu — DEKA DESIGN</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  .recu-wrap { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+  .recu-doc { background: #fff; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+  .recu-head { background: var(--ink); padding: 1.8rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .recu-logo-txt { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--gold); }
+  .recu-logo-txt span { color: #fff; }
+  .recu-head-meta { text-align: right; font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+  .recu-head-meta strong { display: block; font-size: 1rem; color: #fff; margin-bottom: 2px; }
+  .recu-body { padding: 2rem; }
+  .recu-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .partie-box { background: var(--surface); border-radius: 8px; padding: 0.9rem; border-left: 3px solid var(--gold); }
+  .partie-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
+  .partie-name { font-weight: 700; font-size: 0.9rem; }
+  .partie-sub { font-size: 0.72rem; color: var(--text-muted); }
+  .recu-table-wrap { margin-bottom: 1.2rem; overflow-x: auto; }
+  .recu-table { width: 100%; border-collapse: collapse; }
+  .recu-table th { background: var(--surface2); padding: 8px 10px; text-align: left; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+  .recu-table th:first-child { border-radius: 6px 0 0 6px; }
+  .recu-table th:last-child  { border-radius: 0 6px 6px 0; }
+  .recu-table td { padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  .recu-table tr:last-child td { border-bottom: none; }
+  .tr { text-align: right; }
+  .recu-totals { background: var(--ink); color: #fff; border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 1.2rem; position: relative; overflow: hidden; }
+  .total-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 3px 0; color: rgba(255,255,255,0.55); }
+  .total-row.grand { border-top: 1px solid rgba(255,255,255,0.15); margin-top: 6px; padding-top: 8px; font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--gold); }
+  .stamp { position: absolute; top: 50%; right: 16px; transform: translateY(-50%) rotate(-12deg); font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 900; opacity: 0.15; letter-spacing: 0.1em; }
+  .recu-footer-doc { text-align: center; font-size: 0.72rem; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: 12px; }
+  @media (max-width:560px) { .recu-parties { grid-template-columns: 1fr; } }
+  @media print { .no-print { display: none !important; } body { background: #fff; } .recu-wrap { max-width: 100%; padding: 0; margin: 0; } .recu-doc { border: none; border-radius: 0; } }
+</style>
+</head>
+<body>
+
+<div id="topbar-placeholder"></div>
+
+<!-- Actions -->
+<div class="no-print" style="max-width:720px; margin:1.5rem auto 0; padding:0 1rem; display:flex; gap:8px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+  <a href="javascript:history.back()" class="btn btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+  <div style="display:flex; gap:8px;">
+    <button class="btn btn-outline btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimer</button>
+    <button class="btn btn-gold btn-sm" onclick="downloadHTML()"><i class="fa-solid fa-download"></i> Télécharger</button>
+  </div>
+</div>
+
+<div class="recu-wrap">
+  <div class="recu-doc" id="recu-doc">
+    <div style="text-align:center; padding:4rem; color:var(--text-muted);">Chargement…</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script src="../assets/js/topbar.js"></script>
+<script>
+initDB().then(() => {
+  const s = authGetSession();
+  injectTopbar(s?.role === 'admin' ? 'admin' : 'client');
+
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  if (!id) { document.getElementById('recu-doc').innerHTML = '<div style="padding:3rem;text-align:center;color:var(--text-muted);">Facture introuvable.</div>'; return; }
+
+  const facture = dbGet('SELECT f.*, u.nom as client_nom, u.email as client_email FROM factures f JOIN clients c ON c.id = f.client_id JOIN users u ON u.id = c.user_id WHERE f.id = ?', [id]);
+  if (!facture) { document.getElementById('recu-doc').innerHTML = '<div style="padding:3rem;text-align:center;color:var(--text-muted);">Facture introuvable.</div>'; return; }
+
+  const lignes = getFactureLignes(id);
+  const ht  = lignes.reduce((s, l) => s + l.quantite * l.prix_unit, 0);
+  const tva = Math.round(ht * 0.18);
+  const ttc = ht + tva;
+  const stampColor = facture.statut === 'Payé' ? '#27ae60' : facture.statut === 'Annulé' ? '#e74c3c' : '#f39c12';
+  const sCls = facture.statut==='Payé'?'badge-paid':facture.statut==='Annulé'?'badge-cancelled':'badge-unpaid';
+
+  document.title = `Reçu ${facture.numero} — DEKA DESIGN`;
+
+  document.getElementById('recu-doc').innerHTML = `
+    <div class="recu-head">
+      <div>
+        <div class="recu-logo-txt">DEKA<span>.</span></div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-top:3px;">Studio Créatif · Lomé, Togo</div>
+        <div style="font-size:0.65rem;color:rgba(255,255,255,0.3);">contact@dekadesign.tg · +228 90 00 00 00</div>
+      </div>
+      <div class="recu-head-meta">
+        <strong>${facture.numero}</strong>
+        ${facture.type.toUpperCase()}<br>
+        Émis le ${formatDate(facture.date_emit)}<br>
+        Échéance ${formatDate(facture.date_echeance)}
+      </div>
+    </div>
+
+    <div class="recu-body">
+      <div class="recu-parties">
+        <div class="partie-box">
+          <div class="partie-lbl">Émetteur</div>
+          <div class="partie-name">DEKA DESIGN</div>
+          <div class="partie-sub">Studio Créatif & Communication</div>
+          <div class="partie-sub">Lomé, Togo · RCCM TG-LOM-2023</div>
+        </div>
+        <div class="partie-box">
+          <div class="partie-lbl">Destinataire</div>
+          <div class="partie-name">${facture.client_nom}</div>
+          <div class="partie-sub">${facture.client_email}</div>
+        </div>
+      </div>
+
+      <div class="recu-table-wrap">
+        <table class="recu-table">
+          <thead>
+            <tr>
+              <th style="width:55%;">Description</th>
+              <th class="tr" style="width:12%;">Qté</th>
+              <th class="tr" style="width:18%;">P.U (FCFA)</th>
+              <th class="tr" style="width:15%;">Montant</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${lignes.map(l => `
+              <tr>
+                <td>${l.description}</td>
+                <td class="tr">${l.quantite}</td>
+                <td class="tr">${Math.round(l.prix_unit).toLocaleString()}</td>
+                <td class="tr"><strong>${Math.round(l.quantite * l.prix_unit).toLocaleString()}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="recu-totals">
+        <div class="stamp" style="color:${stampColor};">${facture.statut === 'Payé' ? 'PAYÉ' : facture.statut === 'Annulé' ? 'ANNULÉ' : 'EN ATTENTE'}</div>
+        <div class="total-row"><span>Sous-total HT</span><span>${ht.toLocaleString()} FCFA</span></div>
+        <div class="total-row"><span>TVA (18%)</span><span>${tva.toLocaleString()} FCFA</span></div>
+        <div class="total-row grand"><span>TOTAL TTC</span><span>${ttc.toLocaleString()} FCFA</span></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:1.2rem;">
+        <span class="badge ${sCls}" style="font-size:0.82rem;padding:5px 16px;">${facture.statut}</span>
+        ${facture.statut === 'En attente' ? `<span style="font-size:0.75rem;color:var(--text-muted);">Paiement attendu avant le ${formatDate(facture.date_echeance)}</span>` : ''}
+      </div>
+
+      ${facture.note ? `<div style="background:var(--surface);border-radius:8px;padding:10px 14px;font-size:0.78rem;color:var(--text-muted);border-left:3px solid var(--gold);margin-bottom:1rem;"><i class="fa-solid fa-circle-info" style="color:var(--gold);margin-right:6px;"></i>${facture.note}</div>` : ''}
+
+      <div class="recu-footer-doc">
+        DEKA DESIGN — Studio Créatif & Communication · Lomé, Togo<br>
+        Ce document tient lieu de reçu officiel. Conservez-le pour vos archives.
+      </div>
+    </div>
+  `;
+});
+
+function downloadHTML() {
+  try {
+    window.factureNumero = window.factureNumero || document.title.match(/Reçu (DD-\\d{4}-\\d{3})/)?.[1] || 'facture';
+    const docContent = document.getElementById('recu-doc').outerHTML;
+    const styles = document.querySelector('style').textContent;
+    const htmlContent = '<!DOCTYPE html><html lang=\\"fr\\"><head><meta charset=\\"UTF-8\\"><title>Reçu DEKA DESIGN #' + window.factureNumero + '</title><style>body { font-family: Arial, sans-serif; background: #F7F5F0; padding: 2rem; margin: 0; } .recu-wrap { max-width: 720px; margin: auto; } ' + styles.replace(/`/g, '\\\\`').replace(/"/g, '\\\\"') + '</style></head><body>' + docContent + '</body></html>';
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Reçu-DEKA-DESIGN-' + window.factureNumero + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Reçu téléchargé !');
+  } catch (e) {
+    console.error('Download error:', e);
+    showToast('Erreur. Essayez Imprimer.', 4000);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Espace — DEKA DESIGN</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  .top-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+  .forfait-wrap { background: linear-gradient(135deg, var(--ink) 0%, #2c2a22 100%); border-radius: 16px; padding: 1.5rem; color: #fff; border: 1px solid rgba(201,168,76,0.3); grid-column: span 2; }
+  @media (max-width: 700px) { .top-grid { grid-template-columns: 1fr; } .forfait-wrap { grid-column: span 1; } }
+
+  /* Profil card */
+  .profil-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .profil-avatar-big {
+    width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--ink);
+  }
+  .profil-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; }
+  .profil-detail { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .profil-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--info-bg); color: var(--info); margin-top: 5px; display: inline-block; }
+</style>
+</head>
+<body>
+
+<div id="topbar-placeholder"></div>
+
+<main class="page-wrapper">
+
+  <!-- En-tête personnalisé -->
+  <div class="page-header">
+    <div>
+      <h1>Bonjour, <span id="welcome-name" style="color:var(--gold-dark);">…</span> 👋</h1>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Gérez vos projets créatifs avec DEKA DESIGN</p>
+    </div>
+    <button class="btn btn-gold" onclick="openModal('modal-brief')">
+      <i class="fa-solid fa-plus"></i> Nouvelle Demande
+    </button>
+  </div>
+
+  <!-- Grille forfait + stat + profil -->
+  <div class="top-grid">
+
+    <!-- Forfait -->
+    <div class="forfait-wrap">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+        <div>
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:4px;">Forfait mensuel</div>
+          <div style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800;" id="forfait-nom">Pack Essentiel</div>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:var(--gold);" id="forfait-used">0</span>
+          <span style="color:rgba(255,255,255,0.4); font-size:1rem;" id="forfait-max"> / 5</span>
+          <div style="font-size:0.7rem; color:rgba(255,255,255,0.4);">visuels utilisés</div>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="forfait-bar" style="width:0%;"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:8px;">
+        <span style="font-size:0.75rem; color:rgba(255,255,255,0.4);" id="forfait-restant">—</span>
+        <span style="font-size:0.75rem; color:rgba(255,255,255,0.4);">Renouvellement : 1er du mois</span>
+      </div>
+    </div>
+
+    <!-- Stat projets actifs -->
+    <div class="stat-card">
+      <div class="stat-label">En cours</div>
+      <div class="stat-value" id="stat-actifs">0</div>
+      <div class="stat-sub">projets actifs</div>
+    </div>
+
+  </div>
+
+  <!-- Profil rapide -->
+  <div class="profil-card" style="margin-bottom:1.5rem;">
+    <div class="profil-avatar-big" id="profil-initials">?</div>
+    <div>
+      <div class="profil-name" id="profil-nom">—</div>
+      <div class="profil-detail" id="profil-email">—</div>
+      <div class="profil-detail" id="profil-tel"></div>
+      <span class="profil-badge" id="profil-forfait-badge">—</span>
+    </div>
+    <a href="profil.html" class="btn btn-outline btn-sm" style="margin-left:auto;">
+      <i class="fa-solid fa-pen"></i> Modifier
+    </a>
+  </div>
+
+  <!-- Pipeline projets -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title"><i class="fa-solid fa-layer-group"></i> Pipeline de Projets</div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Projet</th><th>Type</th><th>Date</th><th>Statut</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="projects-tbody">
+          <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">Chargement…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Brand Library -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title"><i class="fa-solid fa-folder-open"></i> Brand Library — Fichiers Finaux</div>
+    <div class="brand-grid" id="brand-grid">
+      <div style="color:var(--text-muted); font-size:0.85rem; padding:1rem;">Chargement…</div>
+    </div>
+  </div>
+
+  <!-- Mes Reçus -->
+  <div class="card">
+    <div class="card-title"><i class="fa-solid fa-file-invoice"></i> Mes Reçus & Factures</div>
+    <div id="recus-list">
+      <div style="text-align:center; padding:2rem; color:var(--text-muted);">Chargement…</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODALE : BRIEF -->
+<div class="modal-overlay" id="modal-brief">
+  <div class="modal">
+    <div class="modal-title">
+      Nouvelle Demande
+      <button class="modal-close" onclick="closeModal('modal-brief')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Titre du projet</label>
+      <input class="form-input" id="brief-titre" type="text" placeholder="Ex: Post Instagram promotion Mai">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Type de visuel</label>
+      <select class="form-select" id="brief-type">
+        <option>Post réseaux sociaux</option>
+        <option>Story / Reel</option>
+        <option>Affiche / Flyer</option>
+        <option>Logo / Identité</option>
+        <option>Bannière web</option>
+        <option>Carte de visite</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description & Objectifs</label>
+      <textarea class="form-textarea" id="brief-desc" placeholder="Décrivez votre besoin, message, couleurs souhaitées…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Délai souhaité</label>
+      <input class="form-input" id="brief-delai" type="date">
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeModal('modal-brief')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitBrief()"><i class="fa-solid fa-paper-plane"></i> Envoyer le brief</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script src="../assets/js/topbar.js"></script>
+<script>
+let SESSION = null;
+let CLIENT  = null;
+
+initDB().then(() => {
+  SESSION = authRequire('client'); // redirige si pas connecté
+  if (!SESSION) return;
+  injectTopbar('client');
+
+  CLIENT = getClientByUserId(SESSION.userId);
+  if (!CLIENT) { showToast('Profil client introuvable.'); return; }
+
+  renderPage();
+});
+
+function renderPage() {
+  const initials = CLIENT.nom.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+  const pct = Math.round((CLIENT.visuels_used / CLIENT.forfait_visuels) * 100);
+  const restant = CLIENT.forfait_visuels - CLIENT.visuels_used;
+
+  // En-tête
+  document.getElementById('welcome-name').textContent = CLIENT.nom.split(' ')[0];
+
+  // Forfait
+  document.getElementById('forfait-nom').textContent    = CLIENT.forfait_nom;
+  document.getElementById('forfait-used').textContent   = CLIENT.visuels_used;
+  document.getElementById('forfait-max').textContent    = ' / ' + CLIENT.forfait_visuels;
+  document.getElementById('forfait-restant').textContent = restant + ' visuel' + (restant > 1 ? 's' : '') + ' restant' + (restant > 1 ? 's' : '');
+  const bar = document.getElementById('forfait-bar');
+  bar.style.width = pct + '%';
+  bar.className = 'progress-fill' + (pct >= 90 ? ' danger' : pct >= 70 ? ' warning' : '');
+
+  // Profil rapide
+  document.getElementById('profil-initials').textContent       = initials;
+  document.getElementById('profil-nom').textContent            = CLIENT.nom;
+  document.getElementById('profil-email').textContent          = CLIENT.email;
+  document.getElementById('profil-tel').textContent            = CLIENT.tel || '';
+  document.getElementById('profil-forfait-badge').textContent  = CLIENT.forfait_nom;
+
+  // Projets
+  const projects = getProjectsByClient(CLIENT.id);
+  const actifs = projects.filter(p => p.statut !== 'Livré').length;
+  document.getElementById('stat-actifs').textContent = actifs;
+
+  const tbody = document.getElementById('projects-tbody');
+  if (projects.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">Aucun projet pour le moment</td></tr>';
+  } else {
+    tbody.innerHTML = projects.map(p => `
+      <tr>
+        <td><strong>${p.titre}</strong></td>
+        <td style="font-size:0.8rem; color:var(--text-muted);">${p.type}</td>
+        <td style="font-size:0.78rem; color:var(--text-muted);">${formatDate(p.delai || p.created_at)}</td>
+        <td>${badgeHTML(p.statut)}</td>
+        <td>${p.statut === 'Livré'
+          ? `<button class="btn btn-sm btn-outline" onclick="showToast('⬇️ Téléchargement de ${p.titre.replace(/'/g,"\\'")} ...')"><i class="fa-solid fa-download"></i></button>`
+          : '<span style="font-size:0.75rem; color:var(--text-muted);">En cours…</span>'
+        }</td>
+      </tr>
+    `).join('');
+  }
+
+  // Brand Library
+  const files = getBrandFilesByClient(CLIENT.id);
+  const grid = document.getElementById('brand-grid');
+  if (files.length === 0) {
+    grid.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Aucun fichier disponible pour le moment.</div>';
+  } else {
+    grid.innerHTML = files.map(f => `
+      <div class="brand-item" onclick="showToast('⬇️ Téléchargement de ${f.nom.replace(/'/g,"\\'")}…')">
+        <div class="brand-thumb" style="background:${f.couleur_bg};">${f.icon}</div>
+        <div class="brand-name">${f.nom}</div>
+        <div class="brand-type">${f.type} · <i class="fa-solid fa-arrow-down" style="color:var(--gold-dark);"></i></div>
+      </div>
+    `).join('');
+  }
+
+  // Reçus
+  const factures = getFacturesByClient(CLIENT.id);
+  const recusList = document.getElementById('recus-list');
+  if (factures.length === 0) {
+    recusList.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted);">Aucun reçu pour le moment.</div>';
+  } else {
+    recusList.innerHTML = factures.map(f => {
+      const lignes = getFactureLignes(f.id);
+      const total = lignes.reduce((s, l) => s + l.quantite * l.prix_unit, 0);
+      const sCls = f.statut === 'Payé' ? 'badge-paid' : f.statut === 'Annulé' ? 'badge-cancelled' : 'badge-unpaid';
+      return `
+        <div class="recu-item">
+          <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
+            <div style="width:38px;height:38px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fa-solid fa-file-invoice" style="color:var(--gold-dark);"></i>
+            </div>
+            <div style="min-width:0;">
+              <div class="recu-num">${f.numero}</div>
+              <div style="font-size:0.84rem; font-weight:600;">${f.type}</div>
+              <div style="font-size:0.72rem; color:var(--text-muted);">Émis le ${formatDate(f.date_emit)}</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+            <div style="text-align:right;">
+              <div style="font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:800;">${total.toLocaleString()} FCFA</div>
+              <span class="badge ${sCls}">${f.statut}</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="voirRecu(${f.id})"><i class="fa-solid fa-eye"></i></button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function submitBrief() {
+  const titre = document.getElementById('brief-titre').value.trim();
+  const type  = document.getElementById('brief-type').value;
+  const desc  = document.getElementById('brief-desc').value;
+  const delai = document.getElementById('brief-delai').value;
+  if (!titre) { showToast('⚠️ Veuillez saisir un titre'); return; }
+  createProject(CLIENT.id, titre, type, desc, delai);
+  closeModal('modal-brief');
+  document.getElementById('brief-titre').value = '';
+  document.getElementById('brief-desc').value  = '';
+  document.getElementById('brief-delai').value = '';
+  showToast('✅ Brief envoyé ! DEKA DESIGN vous répond sous 24h.');
+  // Recharger les données client
+  CLIENT = getClientByUserId(SESSION.userId);
+  renderPage();
+}
+
+function voirRecu(factureId) {
+  // Ouvrir la page de détail reçu
+  window.location.href = `recu.html?id=${factureId}`;
+}
+
+function badgeHTML(statut) {
+  const cls = { 'En attente':'badge-pending','Création':'badge-creation','Révision':'badge-revision','Livré':'badge-delivered' };
+  const ico = { 'En attente':'fa-clock','Création':'fa-paintbrush','Révision':'fa-rotate','Livré':'fa-circle-check' };
+  return `<span class="badge ${cls[statut]||''}"><i class="fa-solid ${ico[statut]||'fa-circle'}"></i> ${statut}</span>`;
+}
+</script>
+</body>
+</html>

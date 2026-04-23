@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin — DEKA DESIGN</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  .tab-nav { display:flex; gap:4px; background:rgba(255,255,255,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:12px; padding:4px; margin-bottom:1.5rem; flex-wrap:wrap; }
+  .tab-btn { padding:8px 18px; border-radius:9px; border:none; background:transparent; font-family:'Poppins',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; color:var(--text-muted); transition:0.2s; }
+  .tab-btn.active { background:var(--ink); color:var(--gold); }
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* Styles pour les boutons de relance */
+  .relance-item { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--border); gap:1rem; }
+  .relance-item:last-child { border-bottom:none; }
+  .relance-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .dot-urgent { background:#e74c3c; }
+  .dot-warning { background:#f39c12; }
+  .dot-ok { background:#27ae60; }
+  @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+  .dot-pulse { animation:pulse-dot 1.8s infinite; }
+</style>
+</head>
+<body>
+
+<div id="topbar-placeholder"></div>
+
+<main class="page-wrapper">
+
+  <div class="page-header">
+    <div>
+      <h1>Dashboard <span style="color:var(--gold-dark);">Admin</span></h1>
+      <p style="color:var(--text-muted); font-size:0.85rem;" id="admin-date">—</p>
+    </div>
+    <button class="btn btn-gold" onclick="openModal('modal-add-client')">
+      <i class="fa-solid fa-user-plus"></i> Nouveau client
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; margin-bottom:1.5rem;" id="stats-grid">
+    <div class="stat-card"><div class="stat-label">Clients</div><div class="stat-value" id="s-clients">—</div><div class="stat-sub">actifs</div></div>
+    <div class="stat-card"><div class="stat-label">MRR</div><div class="stat-value" id="s-mrr">—</div><div class="stat-sub">FCFA / mois</div></div>
+    <div class="stat-card"><div class="stat-label">En production</div><div class="stat-value" id="s-active">—</div><div class="stat-sub">projets</div></div>
+    <div class="stat-card"><div class="stat-label">Livrés</div><div class="stat-value" id="s-livres">—</div><div class="stat-sub">ce mois</div></div>
+  </div>
+
+  <!-- Onglets -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('projets')"><i class="fa-solid fa-list-check"></i> Projets</button>
+    <button class="tab-btn" onclick="showTab('clients')"><i class="fa-solid fa-users"></i> Clients</button>
+    <button class="tab-btn" onclick="showTab('factures')"><i class="fa-solid fa-file-invoice-dollar"></i> Factures</button>
+    <button class="tab-btn" onclick="showTab('relances')"><i class="fa-solid fa-bell"></i> Relances</button>
+  </div>
+
+  <!-- ONGLET : PROJETS -->
+  <div class="tab-pane active" id="tab-projets">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-list-check"></i> Tous les projets</div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>Projet</th><th>Client</th><th>Type</th><th>Date</th><th>Statut</th></tr></thead>
+          <tbody id="tbody-projets"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONGLET : CLIENTS -->
+  <div class="tab-pane" id="tab-clients">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-users"></i> Gestion des clients</div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>Client</th><th>Forfait</th><th>Consommation</th><th>MRR</th><th>Depuis</th><th>Actions</th></tr></thead>
+          <tbody id="tbody-clients"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONGLET : FACTURES -->
+  <div class="tab-pane" id="tab-factures">
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;">
+        <span><i class="fa-solid fa-file-invoice-dollar"></i> Factures & Reçus</span>
+        <button class="btn btn-gold btn-sm" onclick="openModal('modal-gen-facture')">
+          <i class="fa-solid fa-circle-plus"></i> Générer une facture
+        </button>
+      </div>
+      <div id="admin-factures-list"></div>
+    </div>
+  </div>
+
+  <!-- ONGLET : RELANCES -->
+  <div class="tab-pane" id="tab-relances">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-bell"></i> Relances automatiques</div>
+      <div id="relances-list"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODALE : Nouveau client -->
+<div class="modal-overlay" id="modal-add-client">
+  <div class="modal">
+    <div class="modal-title">Nouveau Client <button class="modal-close" onclick="closeModal('modal-add-client')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="form-group">
+      <label class="form-label">Nom complet</label>
+      <input class="form-input" id="nc-nom" type="text" placeholder="Koffi Mensah">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email <span style="background:var(--info-bg);color:var(--info);font-size:0.65rem;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:4px;">Obligatoire</span></label>
+      <input class="form-input" id="nc-email" type="email" placeholder="client@exemple.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mot de passe (accès client)</label>
+      <input class="form-input" id="nc-pwd" type="text" value="password123" placeholder="password123">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Téléphone / WhatsApp</label>
+      <input class="form-input" id="nc-tel" type="tel" placeholder="+228 90 00 00 00">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Forfait</label>
+      <select class="form-select" id="nc-forfait">
+        <option value="1">Pack Essentiel — 5 visuels (75 000 FCFA)</option>
+        <option value="2">Pack Pro — 10 visuels (135 000 FCFA)</option>
+        <option value="3">Pack Studio — 20 visuels (250 000 FCFA)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">MRR (FCFA)</label>
+      <input class="form-input" id="nc-mrr" type="number" placeholder="75000">
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-client')">Annuler</button>
+      <button class="btn btn-gold" onclick="doAddClient()"><i class="fa-solid fa-user-plus"></i> Créer le compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE : Générer facture -->
+<div class="modal-overlay" id="modal-gen-facture">
+  <div class="modal modal-lg">
+    <div class="modal-title">Générer une Facture <button class="modal-close" onclick="closeModal('modal-gen-facture')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="form-group" style="grid-column:span 2;">
+        <label class="form-label">Client</label>
+        <select class="form-select" id="gf-client" onchange="prefillFacture()"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="gf-type">
+          <option>Abonnement mensuel</option><option>Facture projet</option>
+          <option>Acompte</option><option>Solde final</option><option>Avoir</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="form-select" id="gf-statut">
+          <option>Payé</option><option>En attente</option><option>Annulé</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date d'émission</label>
+        <input class="form-input" id="gf-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Échéance</label>
+        <input class="form-input" id="gf-echeance" type="date">
+      </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin:0.8rem 0 0.5rem;">
+      <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted);">Lignes de services</span>
+      <button class="btn btn-sm btn-outline" onclick="addLigne()"><i class="fa-solid fa-plus"></i> Ajouter</button>
+    </div>
+    <div id="gf-lignes"></div>
+    <div class="form-group" style="margin-top:1rem;">
+      <label class="form-label">Note</label>
+      <textarea class="form-textarea" id="gf-note" style="min-height:55px;" placeholder="Message au client…"></textarea>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeModal('modal-gen-facture')">Annuler</button>
+      <button class="btn btn-gold" onclick="doGenFacture()"><i class="fa-solid fa-wand-magic-sparkles"></i> Générer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE : Update usage client -->
+<div class="modal-overlay" id="modal-update-client">
+  <div class="modal">
+    <div class="modal-title">Modifier la consommation <button class="modal-close" onclick="closeModal('modal-update-client')"><i class="fa-solid fa-xmark"></i></button></div>
+    <input type="hidden" id="uc-id">
+    <div class="form-group"><label class="form-label">Client</label><input class="form-input" id="uc-nom" readonly style="opacity:0.7;"></div>
+    <div class="form-group"><label class="form-label">Visuels utilisés</label><input class="form-input" id="uc-used" type="number" min="0"></div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeModal('modal-update-client')">Annuler</button>
+      <button class="btn btn-gold" onclick="doUpdateUsage()"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script src="../assets/js/topbar.js"></script>
+<script>
+let ligneIdx = 0;
+
+initDB().then(() => {
+  authRequire('admin');
+  injectTopbar('admin');
+  document.getElementById('admin-date').textContent = 'Vue d\'ensemble — ' + new Date().toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+  renderAll();
+  populateClientSelect();
+});
+
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    const names = ['projets','clients','factures','relances'];
+    b.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function renderAll() {
+  renderStats(); renderProjets(); renderClients(); renderFactures(); renderRelances();
+}
+
+function renderStats() {
+  const s = getAdminStats();
+  document.getElementById('s-clients').textContent = s.clients;
+  document.getElementById('s-mrr').textContent     = Math.round(s.mrr / 1000) + 'K';
+  document.getElementById('s-active').textContent  = s.active;
+  document.getElementById('s-livres').textContent  = s.livres;
+}
+
+function renderProjets() {
+  const projects = getAllProjects();
+  const tbody = document.getElementById('tbody-projets');
+  tbody.innerHTML = projects.map(p => `
+    <tr>
+      <td><strong style="font-size:0.85rem;">${p.titre}</strong></td>
+      <td style="font-size:0.82rem;">${p.client_nom}</td>
+      <td style="font-size:0.78rem; color:var(--text-muted);">${p.type}</td>
+      <td style="font-size:0.78rem; color:var(--text-muted);">${formatDate(p.delai || p.created_at)}</td>
+      <td>
+        <select class="status-select" onchange="doUpdateStatut(${p.id}, this.value)">
+          ${['En attente','Création','Révision','Livré'].map(s => `<option ${s===p.statut?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1.5rem;">Aucun projet</td></tr>';
+}
+
+function renderClients() {
+  const clients = getAllClients();
+  const today = new Date();
+  const tbody = document.getElementById('tbody-clients');
+  tbody.innerHTML = clients.map(c => {
+    const pct = Math.round((c.visuels_used / c.forfait_visuels) * 100);
+    const days = c.last_order_date ? Math.floor((today - new Date(c.last_order_date)) / 86400000) : 999;
+    const inactif = days >= 30 ? `<span style="background:var(--danger-bg);color:var(--danger);font-size:0.6rem;padding:1px 6px;border-radius:99px;font-weight:700;margin-left:4px;">INACTIF ${days}J</span>` : '';
+    const initials = c.nom.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    return `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="avatar" style="width:30px;height:30px;font-size:0.65rem;">${initials}</div>
+            <div>
+              <div style="font-size:0.85rem;font-weight:600;">${c.nom}${inactif}</div>
+              <div style="font-size:0.68rem;color:var(--text-muted);">${c.email}</div>
+              ${c.tel ? `<div style="font-size:0.65rem;color:var(--text-muted);"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> ${c.tel}</div>` : ''}
+            </div>
+          </div>
+        </td>
+        <td style="font-size:0.82rem;">${c.forfait_nom}</td>
+        <td>
+          <div style="min-width:110px;">
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:3px;">${c.visuels_used}/${c.forfait_visuels} — ${pct}%</div>
+            <div class="progress-track" style="height:5px;"><div class="progress-fill ${pct>=90?'danger':pct>=70?'warning':''}" style="width:${pct}%;"></div></div>
+          </div>
+        </td>
+        <td style="font-size:0.85rem;font-weight:600;">${c.mrr?c.mrr.toLocaleString():'—'} FCFA</td>
+        <td style="font-size:0.75rem;color:var(--text-muted);">${formatDate(c.created_at)}</td>
+        <td>
+          <div style="display:flex;gap:5px;">
+            <button class="btn btn-sm btn-outline" onclick="openUpdateUsage(${c.id},'${c.nom}',${c.visuels_used})" title="Modifier usage"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="openFacturePourClient(${c.id})" title="Générer facture"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--gold-dark);"></i></button>
+            ${days >= 30 && c.email ? `<button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger);" onclick="showToast('📧 Email de relance envoyé à ${c.nom}')" title="Relance"><i class="fa-solid fa-envelope"></i></button>` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderFactures() {
+  const factures = getAllFactures();
+  const container = document.getElementById('admin-factures-list');
+  if (factures.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Aucune facture générée.</div>';
+    return;
+  }
+  container.innerHTML = factures.map(f => {
+    const lignes = getFactureLignes(f.id);
+    const total = lignes.reduce((s,l) => s + l.quantite * l.prix_unit, 0);
+    const sCls = f.statut==='Payé'?'badge-paid':f.statut==='Annulé'?'badge-cancelled':'badge-unpaid';
+    return `
+      <div class="recu-item">
+        <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fa-solid fa-file-invoice" style="color:var(--gold-dark);"></i>
+          </div>
+          <div style="min-width:0;">
+            <div class="recu-num">${f.numero}</div>
+            <div style="font-size:0.84rem;font-weight:600;">${f.client_nom} — ${f.type}</div>
+            <div style="font-size:0.7rem;color:var(--text-muted);">Émis le ${formatDate(f.date_emit)} · Échéance ${formatDate(f.date_echeance)}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+          <div style="text-align:right;">
+            <div style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;">${total.toLocaleString()} FCFA</div>
+            <span class="badge ${sCls}">${f.statut}</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-outline" onclick="window.location.href='recu.html?id=${f.id}'" title="Voir"><i class="fa-solid fa-eye"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="cycleStatutFacture(${f.id},'${f.statut}')" title="Changer statut"><i class="fa-solid fa-rotate"></i></button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderRelances() {
+  const inactifs = getInactiveClients(30);
+  const container = document.getElementById('relances-list');
+  if (inactifs.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">✅ Aucune relance nécessaire.</div>';
+    return;
+  }
+  const today = new Date();
+  container.innerHTML = inactifs.map(c => {
+    const days = c.last_order_date ? Math.floor((today - new Date(c.last_order_date)) / 86400000) : 999;
+    const whatsappMsg = `Bonjour ${c.nom}, vos visuels vous attendent ! Consultez votre espace client : https://dekadesign.tg/espace-client.html`;
+    const phoneLink = c.tel ? c.tel.replace(/\s+/g, '') : '';
+    const whatsappLink = phoneLink ? `https://wa.me/${phoneLink}?text=${encodeURIComponent(whatsappMsg)}` : null;
+    const callLink = phoneLink ? `tel:${phoneLink}` : null;
+    
+    return `
+      <div class="relance-item">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="relance-dot dot-urgent dot-pulse"></div>
+          <div>
+            <div style="font-size:0.85rem;font-weight:600;">${c.nom}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">Inactif depuis ${days} jours — ${c.email}</div>
+            ${c.tel ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:3px;"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> ${c.tel}</div>` : ''}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+          <button class="btn btn-sm btn-outline" onclick="showToast('📧 Email de relance envoyé à ${c.email}'); logEmail(${c.id},'relance_inactivite','${c.email}','Vos visuels vous attendent !')" title="Envoyer un email">
+            <i class="fa-solid fa-envelope"></i> Email
+          </button>
+          ${whatsappLink ? `
+            <a href="${whatsappLink}" target="_blank" class="btn btn-sm btn-outline" title="Envoyer sur WhatsApp" style="display:inline-flex;align-items:center;gap:5px;text-decoration:none;">
+              <i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> WhatsApp
+            </a>
+          ` : ''}
+          ${callLink ? `
+            <a href="${callLink}" class="btn btn-sm btn-outline" title="Appeler directement" style="display:inline-flex;align-items:center;gap:5px;text-decoration:none;">
+              <i class="fa-solid fa-phone" style="color:#10B981;"></i> Appel
+            </a>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ---- Actions ----
+function doUpdateStatut(id, statut) {
+  updateProjectStatus(id, statut);
+  showToast('Statut mis à jour → ' + statut);
+  renderStats(); renderProjets();
+}
+
+function openUpdateUsage(id, nom, used) {
+  document.getElementById('uc-id').value  = id;
+  document.getElementById('uc-nom').value = nom;
+  document.getElementById('uc-used').value = used;
+  openModal('modal-update-client');
+}
+
+function doUpdateUsage() {
+  const id   = parseInt(document.getElementById('uc-id').value);
+  const used = parseInt(document.getElementById('uc-used').value) || 0;
+  updateClientUsage(id, used);
+  closeModal('modal-update-client');
+  showToast('✅ Consommation mise à jour');
+  renderClients(); renderStats();
+}
+
+function doAddClient() {
+  const nom  = document.getElementById('nc-nom').value.trim();
+  const email= document.getElementById('nc-email').value.trim();
+  const pwd  = document.getElementById('nc-pwd').value.trim();
+  const tel  = document.getElementById('nc-tel').value.trim();
+  const forf = parseInt(document.getElementById('nc-forfait').value);
+  const mrr  = parseInt(document.getElementById('nc-mrr').value) || 0;
+  if (!nom || !email) { showToast('⚠️ Nom et email sont requis'); return; }
+  createClient(nom, email, pwd || 'password123', tel, forf, mrr);
+  closeModal('modal-add-client');
+  ['nc-nom','nc-email','nc-tel','nc-mrr'].forEach(id => document.getElementById(id).value = '');
+  showToast('✅ Client ' + nom + ' créé avec succès !');
+  renderAll(); populateClientSelect();
+}
+
+// ---- Factures ----
+function populateClientSelect() {
+  const sel = document.getElementById('gf-client');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Choisir un client —</option>';
+  getAllClients().forEach(c => {
+    sel.innerHTML += `<option value="${c.id}">${c.nom}</option>`;
+  });
+  const today = new Date().toISOString().slice(0,10);
+  const plus7  = new Date(Date.now() + 7*86400000).toISOString().slice(0,10);
+  if (document.getElementById('gf-date')) { document.getElementById('gf-date').value = today; document.getElementById('gf-echeance').value = plus7; }
+  document.getElementById('gf-lignes').innerHTML = '';
+  addLigne();
+}
+
+function prefillFacture() {
+  const id = parseInt(document.getElementById('gf-client').value);
+  const c  = id ? getClientById(id) : null;
+  if (!c) return;
+  document.getElementById('gf-lignes').innerHTML = '';
+  ligneIdx = 0;
+  addLigneData(`${c.forfait_nom} — ${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}`, 1, c.mrr);
+  document.getElementById('gf-note').value = `Merci pour votre confiance. Paiement via Mobile Money.`;
+}
+
+function openFacturePourClient(cid) {
+  populateClientSelect();
+  openModal('modal-gen-facture');
+  setTimeout(() => { document.getElementById('gf-client').value = cid; prefillFacture(); }, 50);
+}
+
+function addLigne() { addLigneData('', 1, 0); }
+function addLigneData(desc, qte, pu) {
+  ligneIdx++;
+  const div = document.createElement('div');
+  div.id = 'ligne-' + ligneIdx;
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 70px 110px 36px;gap:6px;margin-bottom:6px;align-items:center;';
+  div.innerHTML = `
+    <input class="form-input" placeholder="Description" value="${desc}">
+    <input class="form-input" type="number" value="${qte}" min="1" style="text-align:center;">
+    <input class="form-input" type="number" value="${pu}" placeholder="P.U">
+    <button class="btn btn-danger btn-sm" style="padding:0;width:36px;height:36px;justify-content:center;" onclick="document.getElementById('ligne-${ligneIdx}').remove()"><i class="fa-solid fa-trash-can"></i></button>
+  `;
+  document.getElementById('gf-lignes').appendChild(div);
+}
+
+function doGenFacture() {
+  const cid = parseInt(document.getElementById('gf-client').value);
+  if (!cid) { showToast('⚠️ Choisissez un client'); return; }
+  const lignesEls = document.getElementById('gf-lignes').querySelectorAll('[id^="ligne-"]');
+  const lignes = [];
+  lignesEls.forEach(el => {
+    const inputs = el.querySelectorAll('input');
+    const desc = inputs[0].value.trim();
+    const qte  = parseFloat(inputs[1].value) || 1;
+    const pu   = parseFloat(inputs[2].value) || 0;
+    if (desc) lignes.push({ description: desc, qte, pu });
+  });
+  if (!lignes.length) { showToast('⚠️ Ajoutez au moins une ligne'); return; }
+  const numero = createFacture(
+    cid,
+    document.getElementById('gf-type').value,
+    document.getElementById('gf-date').value,
+    document.getElementById('gf-echeance').value,
+    document.getElementById('gf-statut').value,
+    document.getElementById('gf-note').value,
+    lignes
+  );
+  closeModal('modal-gen-facture');
+  showToast('✅ Facture ' + numero + ' générée !');
+  renderFactures();
+}
+
+function cycleStatutFacture(id, current) {
+  const statuts = ['En attente','Payé','Annulé'];
+  const next = statuts[(statuts.indexOf(current) + 1) % statuts.length];
+  updateFactureStatut(id, next);
+  showToast('Statut facture → ' + next);
+  renderFactures();
+}
+</script>
+</body>
+</html>
