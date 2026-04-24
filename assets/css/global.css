@@ -386,9 +386,120 @@ tbody td { padding: 12px; font-size: 0.86rem; }
   transform: scale(1.1);
 }
 
+/* ===== FOOTER ===== */
+footer {
+  background: #080807;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  padding: 3.5rem 2rem 2rem;
+  margin-top: 3rem;
+}
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.footer-logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.footer-logo-section img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  object-fit: cover;
+}
+.footer-logo-section .logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+.footer-logo-section .logo-sub {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.footer-contact-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.footer-contact-section .contact-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.footer-contact-section .contact-email {
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.footer-contact-section .contact-email:hover {
+  color: var(--gold);
+}
+.footer-socials-section {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  align-items: center;
+}
+.social-link {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.1);
+  color: var(--gold);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 1rem;
+}
+.social-link:hover {
+  background: var(--gold);
+  color: #080807;
+  transform: translateY(-3px);
+}
+.footer-bottom {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.05em;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 860px) {
   .nav-label { display: none; }
+}
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  .footer-logo-section {
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-socials-section {
+    justify-content: center;
+  }
 }
 @media (max-width: 640px) {
   .topbar { padding: 0 1rem; height: 56px; }
