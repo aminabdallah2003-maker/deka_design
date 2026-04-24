@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../assets/css/global.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
+/* CSS INTÉGRÉ */
 .svc-hero{background:var(--ink);padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
 .svc-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(201,168,76,0.015) 40px,rgba(201,168,76,0.015) 41px);}
 .svc-hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;}
@@ -24,10 +25,12 @@
 .svc-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;display:flex;flex-direction:column;}
 .svc-card:hover{transform:translateY(-5px);box-shadow:0 16px 45px rgba(0,0,0,0.1);border-color:rgba(201,168,76,0.4);}
 .svc-img{width:100%;height:200px;overflow:hidden;position:relative;background:var(--surface2);}
-.svc-img-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--ink) 0%,#2c2a22 100%);gap:8px;}
-.svc-img-fallback i{font-size:2.8rem;color:var(--gold);}
-.svc-img-fallback span{font-size:0.72rem;color:rgba(255,255,255,0.4);}
-.svc-cat-badge{position:absolute;top:12px;left:12px;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;padding:3px 10px;border-radius:99px;background:rgba(15,14,12,0.75);color:var(--gold);backdrop-filter:blur(4px);}
+
+/* Style pour les images ajoutées */
+.svc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.svc-card:hover .svc-img img { transform: scale(1.1); }
+
+.svc-cat-badge{position:absolute;top:12px;left:12px;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;padding:3px 10px;border-radius:99px;background:rgba(15,14,12,0.75);color:var(--gold);backdrop-filter:blur(4px);z-index:2;}
 .svc-body{padding:1.2rem 1.3rem 1.3rem;flex:1;display:flex;flex-direction:column;}
 .svc-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--ink);margin-bottom:8px;line-height:1.3;}
 .svc-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.7;flex:1;margin-bottom:1.1rem;}
@@ -56,7 +59,6 @@
 <body>
 <div id="topbar-placeholder"></div>
 
-<!-- HERO -->
 <section class="svc-hero">
 <div class="svc-hero-inner">
   <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:99px;padding:5px 16px;margin-bottom:1.5rem;">
@@ -72,18 +74,12 @@
 </div>
 </section>
 
-<!-- FILTRES -->
 <div class="cat-filters" id="cat-filters">
   <button class="cat-btn active" onclick="filterCat('all',this)"><i class="fa-solid fa-th-large"></i> Tout voir</button>
   <button class="cat-btn" onclick="filterCat('specialites',this)"> Spécialités</button>
   <button class="cat-btn" onclick="filterCat('papier',this)"> Support papier</button>
   <button class="cat-btn" onclick="filterCat('goodies',this)"> Outils &amp; Goodies</button>
-  <button class="cat-btn" onclick="filterCat('materiel',this)"> Matériel Pub</button>
-  <button class="cat-btn" onclick="filterCat('promo',this)"> Accessoires Promo</button>
-  <button class="cat-btn" onclick="filterCat('impressions',this)"> Impressions</button>
   <button class="cat-btn" onclick="filterCat('auto',this)"> Branding Auto</button>
-  <button class="cat-btn" onclick="filterCat('enseignes',this)"> Enseignes</button>
-  <button class="cat-btn" onclick="filterCat('packaging',this)"> Packaging</button>
 </div>
 
 <div id="svc-container">
@@ -98,569 +94,249 @@
 
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-mobile-screen"></i><span>Pochettes Personnalisées de Téléphone</span></div>
+    <img src="../assets/images/pochete_perso.webp" alt="Pochettes Téléphone">
     <span class="svc-cat-badge">Spécialité</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Pochettes Personnalisées de Téléphone</div>
-    <div class="svc-desc">Accessoire de communication original et quotidien, personnalisable avec l'image ou les informations de votre choix. Compatible avec tous les modèles de téléphone du marché. Support publicitaire innovant apprécié de vos employés, renforçant la visibilité de votre marque.</div>
+    <div class="svc-desc">Accessoire de communication original et quotidien, personnalisable avec l'image ou les informations de votre choix.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Pochettes Personnalisées de Téléphone')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-laptop"></i><span>Personnalisation d'Ordinateurs</span></div>
+    <img src="../assets/images/IMG_4840.PNG" alt="PC Branding">
     <span class="svc-cat-badge">Spécialité</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Personnalisation d'Ordinateurs</div>
-    <div class="svc-desc">Service de branding professionnel pour habiller vos équipements informatiques aux couleurs de votre entreprise. Designs durables et résistants qui transforment vos ordinateurs en supports de communication passive. Solution distinctive pour renforcer votre identité visuelle.</div>
+    <div class="svc-desc">Designs durables et résistants qui transforment vos ordinateurs en supports de communication passive.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Personnalisation d\'Ordinateurs')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-mug-hot"></i><span>Tasses Personnalisées</span></div>
+    <img src="../assets/images/IMG_4842.PNG" alt="Tasses">
     <span class="svc-cat-badge">Spécialité</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Tasses Personnalisées</div>
-    <div class="svc-desc">Objets publicitaires polyvalents personnalisables avec vos informations d'entreprise. Cadeaux d'affaires appréciés pour vos clients ou accessoires pratiques pour vos équipes. Visibilité quotidienne de votre marque. Possibilité de personnaliser également le carton de la tasse.</div>
+    <div class="svc-desc">Objets publicitaires polyvalents personnalisables. Cadeaux d'affaires appréciés pour vos clients.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Tasses Personnalisées')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-image"></i><span>Cadres Photo</span></div>
+    <img src="../assets/images/cadre photo.webp" alt="Cadres">
     <span class="svc-cat-badge">Spécialité</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Cadres Photo</div>
-    <div class="svc-desc">Supports de communication élégants pour valoriser vos espaces professionnels. Disponibles en différents formats standards et personnalisés, adaptés pour bureau ou affichage mural. Idéaux pour mettre en avant les valeurs de votre entreprise, portraits de dirigeants ou informations stratégiques.</div>
+    <div class="svc-desc">Supports de communication élégants pour valoriser vos espaces professionnels ou bureau.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Cadres Photo')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-border-all"></i><span>Cadres Photo Plexiglas</span></div>
+    <img src="../assets/images/horloge_perso.webp" alt="Horloges">
     <span class="svc-cat-badge">Spécialité</span>
   </div>
   <div class="svc-body">
-    <div class="svc-name">Cadres Photo Plexiglas</div>
-    <div class="svc-desc">Cadres photo modernes en plexiglas transparent disponibles en toutes tailles. Rendu contemporain et élégant qui met en valeur vos visuels sans les alourdir. Matériau résistant et facile d'entretien, idéal pour espaces professionnels ou domestiques.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Cadres Photo Plexiglas')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-clock"></i><span>Montres et Horloges Personnalisées</span></div>
-    <span class="svc-cat-badge">Spécialité</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Montres et Horloges Personnalisées</div>
-    <div class="svc-desc">Objets utilitaires personnalisés avec votre logo ou design. Gamme complète : montres-bracelets à cadran personnalisé, horloges murales, horloges de table. Cadeaux d'affaires durables qui garantissent une visibilité quotidienne de votre marque tout en offrant une utilité pratique.</div>
+    <div class="svc-name">Montres et Horloges</div>
+    <div class="svc-desc">Objets utilitaires personnalisés. Horloges murales ou de table pour une visibilité quotidienne.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Montres et Horloges Personnalisées')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
+<div class="svc-card">
+  <div class="svc-img">
+    <img src="../assets/images/photo_plexic.webp" alt="Plexiglas">
+    <span class="svc-cat-badge">Spécialité</span>
+  </div>
+  <div class="svc-body">
+    <div class="svc-name">Cadres Photo Plexiglas</div>
+    <div class="svc-desc">Rendu contemporain et élégant qui met en valeur vos visuels sans les alourdir.</div>
+    <div class="svc-footer">
+      <button class="svc-cta" onclick="commander('Cadres Photo Plexiglas')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
+    </div>
+  </div>
+</div>
+
 </div>
 </section>
 
 <section class="cat-section" data-cat="papier">
 <div class="cat-header">
   <div class="cat-icon"><i class="fa-solid fa-print"></i></div>
-  <div><div class="cat-title">Support Publicitaire Papier</div><div style="font-size:0.78rem;color:var(--text-muted);">Impression & communication papier</div></div>
+  <div><div class="cat-title">Support Publicitaire Papier</div><div style="font-size:0.78rem;color:var(--text-muted);">Impression & communication</div></div>
   <span class="cat-count">3 services</span>
 </div>
 <div class="services-grid">
 
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-file-alt"></i><span>Flyers</span></div>
+    <img src="../assets/images/IMG_4858.PNG" alt="Flyers">
     <span class="svc-cat-badge">Papier</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Flyers</div>
-    <div class="svc-desc">Support de communication papier essentiel pour promouvoir vos événements, produits et services. Disponibles en plusieurs formats : A4, A5, ou format plié ou personnalisé. Impression recto ou recto-verso selon vos besoins, dans la quantité d'exemplaires souhaitée.</div>
+    <div class="svc-desc">Promotion d'événements et services. Formats A4, A5, pliés ou personnalisés.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Flyers')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-id-card"></i><span>Cartes de Visite</span></div>
+    <img src="../assets/images/34805830-402e-4f7c-8e28-97e43f867002.JPG" alt="Cartes de visite">
     <span class="svc-cat-badge">Papier</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Cartes de Visite</div>
-    <div class="svc-desc">Outil professionnel indispensable pour marquer votre présence et faciliter vos échanges commerciaux. Disponibles en plusieurs formats standard ou personnalisés. Impression recto ou recto-verso, avec différentes finitions : découpe spéciale, plastification pour une durabilité optimale.</div>
+    <div class="svc-desc">Outil indispensable pour marquer votre présence et faciliter vos échanges commerciaux.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Cartes de Visite')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-book"></i><span>Agendas Personnalisés</span></div>
+    <img src="../assets/images/4672c8b5-818b-46c3-9cfe-a3b6e6c86be5.JPG" alt="Agendas">
     <span class="svc-cat-badge">Papier</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Agendas Personnalisés</div>
-    <div class="svc-desc">Support publicitaire prisé des entreprises pour fidéliser leur clientèle en début d'année. Personnalisables avec votre logo et identité visuelle pour maintenir votre marque visible toute l'année. Différents formats et reliures disponibles selon vos préférences.</div>
+    <div class="svc-desc">Fidélisez votre clientèle avec des agendas aux couleurs de votre entreprise.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Agendas Personnalisés')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 </div>
 </section>
 
 <section class="cat-section" data-cat="goodies">
 <div class="cat-header">
   <div class="cat-icon"><i class="fa-solid fa-gift"></i></div>
-  <div><div class="cat-title">Outils Professionnel &amp; Goodies</div><div style="font-size:0.78rem;color:var(--text-muted);">Objets publicitaires du quotidien</div></div>
+  <div><div class="cat-title">Outils Professionnel & Goodies</div><div style="font-size:0.78rem;color:var(--text-muted);">Objets du quotidien</div></div>
   <span class="cat-count">6 services</span>
 </div>
 <div class="services-grid">
 
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-pen"></i><span>Stylos Personnalisés</span></div>
+    <img src="../assets/images/IMG_4856.PNG" alt="Stylos">
     <span class="svc-cat-badge">Goodies</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Stylos Personnalisés</div>
-    <div class="svc-desc">Objets publicitaires incontournables gravés avec votre logo et slogan. Support de communication du quotidien, idéal pour équiper votre personnel ou distribuer en goodies lors d'événements professionnels ou à des clients.</div>
+    <div class="svc-desc">Support de communication du quotidien, gravés avec votre logo et slogan.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Stylos Personnalisés')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-stamp"></i><span>Tampons d'Entreprise</span></div>
-    <span class="svc-cat-badge">Goodies</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Tampons d'Entreprise</div>
-    <div class="svc-desc">Outils administratifs essentiels pour authentifier vos documents officiels. Tampons de signature ou d'entreprise personnalisés selon vos besoins administratifs et juridiques. Nous disposons de tampons simple, auto-encreur, tampon sec (embossage).</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Tampons d\'Entreprise')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-calendar"></i><span>Calendriers Personnalisés</span></div>
-    <span class="svc-cat-badge">Goodies</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Calendriers Personnalisés</div>
-    <div class="svc-desc">Supports publicitaires durables disponibles en multiples formats : format carte de crédit pour la praticité ou grands formats pour l'affichage. Visibilité garantie toute l'année dans les bureaux de vos clients.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Calendriers Personnalisés')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-usb"></i><span>Clés USB Personnalisées</span></div>
+    <img src="../assets/images/IMG_4855.PNG" alt="Clés USB">
     <span class="svc-cat-badge">Goodies</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Clés USB Personnalisées</div>
-    <div class="svc-desc">Accessoires high-tech utiles disponibles en différents modèles et capacités. Cadeaux d'affaires technologiques appréciés qui allient praticité et communication de votre marque.</div>
+    <div class="svc-desc">Cadeaux technologiques qui allient praticité et communication de marque.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Clés USB Personnalisées')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-key"></i><span>Porte-Clés Personnalisés</span></div>
+    <img src="../assets/images/IMG_4857.PNG" alt="Tampons">
     <span class="svc-cat-badge">Goodies</span>
   </div>
   <div class="svc-body">
-    <div class="svc-name">Porte-Clés Personnalisés</div>
-    <div class="svc-desc">Accessoires du quotidien aux couleurs de votre entreprise. Goodies pratiques et durables qui accompagnent vos clients partout pour une visibilité constante de votre marque.</div>
+    <div class="svc-name">Tampons d'Entreprise</div>
+    <div class="svc-desc">Authentifiez vos documents. Modèles auto-encreurs, secs ou simples.</div>
     <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Porte-Clés Personnalisés')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
+      <button class="svc-cta" onclick="commander('Tampons d\'Entreprise')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-lightbulb"></i><span>Porte-Clés Projecteur</span></div>
-    <span class="svc-cat-badge">Goodies</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Porte-Clés Projecteur</div>
-    <div class="svc-desc">Innovation publicitaire originale qui projette votre logo en lumière une fois activé. Gadget technologique surprenant qui marque les esprits et génère de la curiosité autour de votre marque.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Porte-Clés Projecteur')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-</div>
-</section>
 
-<section class="cat-section" data-cat="materiel">
-<div class="cat-header">
-  <div class="cat-icon"><i class="fa-solid fa-tv"></i></div>
-  <div><div class="cat-title">Matériel Publicitaire</div><div style="font-size:0.78rem;color:var(--text-muted);">Affichage &amp; présentoir professionnel</div></div>
-  <span class="cat-count">3 services</span>
-</div>
-<div class="services-grid">
-
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-desktop"></i><span>Écrans Verticaux</span></div>
-    <span class="svc-cat-badge">Matériel</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Écrans Verticaux</div>
-    <div class="svc-desc">Solutions d'affichage professionnel pour vos présentations et événements. Supports polyvalents idéaux pour diffuser vos contenus publicitaires en halls d'accueil, foires commerciales ou réunions d'entreprise.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Écrans Verticaux')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-flag"></i><span>Kakémonos</span></div>
-    <span class="svc-cat-badge">Matériel</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Kakémonos</div>
-    <div class="svc-desc">Supports d'affichage élégants et transportables pour vos événements professionnels. Visibilité optimale de votre marque lors de salons, conférences ou dans vos espaces d'accueil.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Kakémonos')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-globe"></i><span>Projecteur Holographique 3D</span></div>
-    <span class="svc-cat-badge">Matériel</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Projecteur Holographique 3D</div>
-    <div class="svc-desc">Technologie de communication révolutionnaire pour captiver votre audience. Solution d'affichage spectaculaire qui transforme vos présentations en expériences mémorables et différencie votre entreprise par l'innovation.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Projecteur Holographique 3D')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-
-<section class="cat-section" data-cat="promo">
-<div class="cat-header">
-  <div class="cat-icon"><i class="fa-solid fa-shirt"></i></div>
-  <div><div class="cat-title">Accessoires Promotionnels</div><div style="font-size:0.78rem;color:var(--text-muted);">Textile &amp; objets à votre image</div></div>
-  <span class="cat-count">6 services</span>
-</div>
-<div class="services-grid">
-
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-id-badge"></i><span>Badges d'Accès</span></div>
-    <span class="svc-cat-badge">Promo</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Badges d'Accès</div>
-    <div class="svc-desc">Solutions d'identification professionnelle pour employés et visiteurs. Disponibles en différents modèles, formes et tailles selon vos besoins sécuritaires. Adaptés également pour l'accréditation lors d'événements d'entreprise.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Badges d\'Accès')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-shirt"></i><span>T-Shirts et Polos Personnalisés</span></div>
-    <span class="svc-cat-badge">Promo</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">T-Shirts et Polos Personnalisés</div>
-    <div class="svc-desc">Vêtements professionnels aux couleurs de votre entreprise réalisés avec les techniques de sérigraphie. Produits promotionnels idéals à distribuer lors d'événements et à vos clients.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('T-Shirts et Polos Personnalisés')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-hat-cowboy"></i><span>Broderie sur Vêtements</span></div>
-    <span class="svc-cat-badge">Promo</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Broderie sur Vêtements</div>
-    <div class="svc-desc">Service de personnalisation textile haut de gamme applicable sur tous types de tissus. Finition élégante et durable pour marquer vos vêtements d'entreprise avec distinction.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Broderie sur Vêtements')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-baseball-bat-ball"></i><span>Chapeaux et Casquettes</span></div>
-    <span class="svc-cat-badge">Promo</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Chapeaux et Casquettes</div>
-    <div class="svc-desc">Accessoires vestimentaires personnalisés avec votre logo. Goodies appréciés du personnel et des clients, particulièrement efficaces lors d'événements en extérieur.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Chapeaux et Casquettes')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-wine-bottle"></i><span>Thermos Bois Gravé</span></div>
-    <span class="svc-cat-badge">Promo</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Thermos Bois Gravé</div>
-    <div class="svc-desc">Accessoire écologique premium personnalisable par gravure sur bois. Cadeau d'affaires raffiné qui véhicule une image responsable de votre entreprise.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Thermos Bois Gravé')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-mug-hot"></i><span>Thermos Cup Personnalisé</span></div>
-    <span class="svc-cat-badge">Promo</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Thermos Cup Personnalisé</div>
-    <div class="svc-desc">Mug isotherme personnalisable avec logo ou photo. Accessoire pratique du quotidien qui maintient vos boissons à température tout en affichant votre marque.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Thermos Cup Personnalisé')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-
-<section class="cat-section" data-cat="impressions">
-<div class="cat-header">
-  <div class="cat-icon"><i class="fa-solid fa-layer-group"></i></div>
-  <div><div class="cat-title">Impressions sur Tout Supports</div><div style="font-size:0.78rem;color:var(--text-muted);">Bâches, vitres, murs et plus</div></div>
-  <span class="cat-count">2 services</span>
-</div>
-<div class="services-grid">
-
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-expand"></i><span>Impressions Tout Support</span></div>
-    <span class="svc-cat-badge">Impression</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Impressions Tout Support</div>
-    <div class="svc-desc">Service d'impression polyvalent répondant à tous vos besoins de communication visuelle. Nous imprimons sur bâches pour événements extérieurs, autocollants pour branding véhicules ou vitres, papier peint, papier photo haute définition, plexiglas, foam et textiles.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Impressions Tout Support')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-paint-roller"></i><span>Papier Peint Personnalisé</span></div>
-    <span class="svc-cat-badge">Impression</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Papier Peint Personnalisé</div>
-    <div class="svc-desc">Solution de décoration murale sur mesure qui transforme vos espaces professionnels en véritables outils de communication. Idéal pour créer des environnements inspirants ou aménager des espaces d'accueil marquants. Installation temporaire ou permanente.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Papier Peint Personnalisé')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
 </div>
 </section>
 
 <section class="cat-section" data-cat="auto">
 <div class="cat-header">
   <div class="cat-icon"><i class="fa-solid fa-car"></i></div>
-  <div><div class="cat-title">Branding Automobile</div><div style="font-size:0.78rem;color:var(--text-muted);">Habillage véhicules &amp; flotte</div></div>
+  <div><div class="cat-title">Branding Automobile</div><div style="font-size:0.78rem;color:var(--text-muted);">Habillage véhicules</div></div>
   <span class="cat-count">2 services</span>
 </div>
 <div class="services-grid">
 
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-car-side"></i><span>Branding de Voiture</span></div>
+    <img src="../assets/images/3b9e9d2a-fdd9-434b-8f2e-41d9c4666172_C118541D-BF70-466D-8AAF-FBAEAD3387F9.JPG" alt="Auto branding">
     <span class="svc-cat-badge">Auto</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Branding de Voiture</div>
-    <div class="svc-desc">Service de personnalisation véhicule qui transforme votre automobile en support publicitaire mobile de haute qualité. Habillage complet ou partiel aux couleurs de votre entreprise. Techniques garantissant une résistance aux intempéries et aux rayons ultraviolet.</div>
+    <div class="svc-desc">Transformez votre automobile en support publicitaire mobile de haute qualité.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Branding de Voiture')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 <div class="svc-card">
   <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-truck"></i><span>Branding Grands Véhicules</span></div>
+    <img src="../assets/images/2f927b87-f876-4d02-a42a-1f4e00067e8f.JPG" alt="Truck branding">
     <span class="svc-cat-badge">Auto</span>
   </div>
   <div class="svc-body">
     <div class="svc-name">Branding Grands Véhicules</div>
-    <div class="svc-desc">Personnalisation de véhicules utilitaires, camions et poids lourds pour un impact publicitaire maximal. Recommandé pour les entreprises de transport, BTP, hôtels. Matériaux haute résistance pour usage intensif. Exposition quotidienne sur de nombreux kilomètres.</div>
+    <div class="svc-desc">Personnalisation de camions et poids lourds pour un impact publicitaire maximal.</div>
     <div class="svc-footer">
       <button class="svc-cta" onclick="commander('Branding Grands Véhicules')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
     </div>
   </div>
 </div>
+
 </div>
 </section>
 
-<section class="cat-section" data-cat="enseignes">
-<div class="cat-header">
-  <div class="cat-icon"><i class="fa-solid fa-sign-hanging"></i></div>
-  <div><div class="cat-title">Enseignes Publicitaires</div><div style="font-size:0.78rem;color:var(--text-muted);">Signalétique lumineuse &amp; affichage</div></div>
-  <span class="cat-count">3 services</span>
-</div>
-<div class="services-grid">
-
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-lightbulb"></i><span>Enseigne Lumineuse</span></div>
-    <span class="svc-cat-badge">Enseigne</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Enseigne Lumineuse</div>
-    <div class="svc-desc">Solution d'affichage nocturne haute visibilité pour votre façade commerciale. Conception sur mesure intégrant éclairage LED économique et longue durée pour un rendu lumineux optimal 24h/24. Matériaux résistants aux intempéries. Installation professionnelle conforme aux normes.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Enseigne Lumineuse')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-magic"></i><span>Enseigne Néon</span></div>
-    <span class="svc-cat-badge">Enseigne</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Enseigne Néon</div>
-    <div class="svc-desc">Signalétique lumineuse au rendu authentique et chaleureux qui marque les esprits par son esthétique distinctive. Particulièrement efficace pour créer une ambiance unique et mémorable. Éclairage continu qui transforme votre façade en point de repère nocturne attractif.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Enseigne Néon')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-square-full"></i><span>Boîte à Lumière Publicitaire</span></div>
-    <span class="svc-cat-badge">Enseigne</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Boîte à Lumière Publicitaire</div>
-    <div class="svc-desc">Cadre publicitaire lumineux en aluminium équipé d'un diffuseur en plexiglas rétroéclairé par système LED. Support d'affichage premium qui sublime vos visuels par un éclairage uniforme. L'affiche se change facilement selon vos campagnes.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Boîte à Lumière Publicitaire')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-
-<section class="cat-section" data-cat="packaging">
-<div class="cat-header">
-  <div class="cat-icon"><i class="fa-solid fa-box-open"></i></div>
-  <div><div class="cat-title">Services de Packaging</div><div style="font-size:0.78rem;color:var(--text-muted);">Emballages &amp; étiquettes sur mesure</div></div>
-  <span class="cat-count">4 services</span>
-</div>
-<div class="services-grid">
-
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-shopping-bag"></i><span>Sac Cadeaux</span></div>
-    <span class="svc-cat-badge">Packaging</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Sac Cadeaux</div>
-    <div class="svc-desc">Emballages publicitaires en papier personnalisables en différentes tailles, couleurs et finitions. Support de communication durable qui prolonge la visibilité de votre marque au-delà de l'achat.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Sac Cadeaux')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-box"></i><span>Packaging Personnalisé</span></div>
-    <span class="svc-cat-badge">Packaging</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Packaging Personnalisé</div>
-    <div class="svc-desc">Conception et fabrication de cartons sur mesure pour valoriser vos produits. Du carton de savon aux emballages complexes, nous créons des packagings qui reflètent votre identité de marque et optimisent la présentation en point de vente.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Packaging Personnalisé')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-tag"></i><span>Étiquettes Produits</span></div>
-    <span class="svc-cat-badge">Packaging</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Étiquettes Produits</div>
-    <div class="svc-desc">Impression d'étiquettes personnalisées pour tous supports : bouteilles, produits cosmétiques, alimentaires ou industriels. Matériaux résistants avec impression haute définition pour un rendu professionnel qui valorise votre marque.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Étiquettes Produits')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-<div class="svc-card">
-  <div class="svc-img">
-    <div class="svc-img-fallback"><i class="fa-solid fa-bag-shopping"></i><span>Impression sur Plastique</span></div>
-    <span class="svc-cat-badge">Packaging</span>
-  </div>
-  <div class="svc-body">
-    <div class="svc-name">Impression sur Plastique</div>
-    <div class="svc-desc">Service d'impression sur supports plastiques personnalisés aux couleurs de votre entreprise. Matériau durable et polyvalent adapté aux usages intérieurs comme extérieurs. Disponible en différentes tailles prédéfinies.</div>
-    <div class="svc-footer">
-      <button class="svc-cta" onclick="commander('Impression sur Plastique')"><i class="fa-solid fa-cart-plus"></i> Commander</button>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-
-</div><!-- /svc-container -->
-
-<!-- CTA FINAL -->
-<section class="svc-final">
+</div><section class="svc-final">
   <div style="max-width:700px;margin:0 auto;">
     <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff;margin-bottom:1rem;line-height:1.2;">
       Vous ne trouvez pas<br>ce qu'il vous faut ?
     </h2>
     <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.8;margin-bottom:2.5rem;">
-      Contactez-nous directement — DEKA DESIGN peut personnaliser presque tout support. Parlons de votre projet.
+      Contactez-nous directement — DEKA DESIGN peut personnaliser presque tout support.
     </p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-      <a href="login.html" class="btn btn-gold btn-lg"><i class="fa-solid fa-user"></i> Accéder à mon espace</a>
       <a href="https://wa.me/22890000000" target="_blank"
          class="btn btn-lg"
-         style="background:transparent;border:1.5px solid rgba(255,255,255,0.2);color:#fff;transition:0.2s;"
-         onmouseover="this.style.borderColor='#25D366';this.style.color='#25D366'"
-         onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='#fff'">
-        <i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> WhatsApp
+         style="background:var(--gold);color:var(--ink);padding:12px 25px;border-radius:10px;text-decoration:none;font-weight:700;">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp
       </a>
     </div>
   </div>
@@ -668,34 +344,20 @@
 
 <footer style="background:#080807;padding:2rem;text-align:center;border-top:1px solid rgba(201,168,76,0.1);">
   <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--gold);margin-bottom:4px;">DEKA DESIGN</div>
-  <div style="font-size:0.72rem;color:rgba(255,255,255,0.25);">Studio Créatif · Lomé, Togo · contact@dekadesign.tg</div>
+  <div style="font-size:0.72rem;color:rgba(255,255,255,0.25);">Studio Créatif · Lomé, Togo</div>
 </footer>
 
-<!-- MODALE COMMANDE -->
 <div class="order-overlay" id="order-modal">
   <div class="order-box">
     <div class="ok-icon"><i class="fa-solid fa-check"></i></div>
     <h3>Commande prise en compte !</h3>
     <div class="order-tag" id="order-svc-name">—</div>
-    <p>Votre demande a été enregistrée avec succès.<br>L'équipe <strong>DEKA DESIGN</strong> vous contactera dans les <strong>24h</strong> pour confirmer les détails et le devis.</p>
-    <div class="steps-box">
-      <div class="step-row"><i class="fa-solid fa-circle-check"></i> Votre commande est enregistrée</div>
-      <div class="step-row"><i class="fa-solid fa-phone"></i> Un conseiller vous rappelle sous 24h</div>
-      <div class="step-row"><i class="fa-solid fa-file-invoice"></i> Devis &amp; confirmation par WhatsApp</div>
-      <div class="step-row"><i class="fa-solid fa-truck-fast"></i> Livraison selon votre planning</div>
-    </div>
-    <button class="close-btn" onclick="fermer()"><i class="fa-solid fa-circle-check"></i> Parfait, merci !</button>
+    <p>L'équipe <strong>DEKA DESIGN</strong> vous contactera dans les 24h.</p>
+    <button class="close-btn" onclick="fermer()">Parfait, merci !</button>
   </div>
 </div>
 
-<div id="toast"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
-<script src="../assets/js/db.js"></script>
-<script src="../assets/js/topbar.js"></script>
 <script>
-initDB().then(function(){ injectTopbar('services'); });
-
 function filterCat(cat, btn){
   document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
@@ -709,19 +371,60 @@ function filterCat(cat, btn){
 }
 
 function commander(nom){
-  var s=authGetSession();
-  if(s && s.role==='client' && s.clientId){
-    createProject(s.clientId, nom, nom, 'Commande depuis la page Services', null);
-  }
   document.getElementById('order-svc-name').textContent = nom;
   var m=document.getElementById('order-modal');
   m.classList.add('open');
-  m.onclick=function(e){ if(e.target===m) fermer(); };
 }
 
 function fermer(){
   document.getElementById('order-modal').classList.remove('open');
 }
 </script>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-container">
+    <!-- Logo Section (Gauche) -->
+    <div class="footer-logo-section">
+      <img src="../assets/images/logo.png" alt="DEKA DESIGN Logo">
+      <div class="logo-text">DEKA DESIGN</div>
+      <div class="logo-sub">Studio Créatif</div>
+    </div>
+
+    <!-- Contact Section (Centre) -->
+    <div class="footer-contact-section">
+      <div class="contact-label">Nous Contacter</div>
+      <a href="mailto:contact@dekadesign.tg" class="contact-email">contact@dekadesign.tg</a>
+    </div>
+
+    <!-- Social Media Section (Droite) -->
+    <div class="footer-socials-section">
+      <a href="https://www.tiktok.com" target="_blank" title="TikTok" class="social-link">
+        <i class="fa-brands fa-tiktok"></i>
+      </a>
+      <a href="https://www.facebook.com" target="_blank" title="Facebook" class="social-link">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a href="https://www.youtube.com" target="_blank" title="YouTube" class="social-link">
+        <i class="fa-brands fa-youtube"></i>
+      </a>
+      <a href="https://wa.me" target="_blank" title="WhatsApp" class="social-link">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    © 2024 DEKA DESIGN. Tous droits réservés. • Lomé, Togo
+  </div>
+</footer>
+
+<!-- Scripts pour topbar et base de données -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="../assets/js/db.js"></script>
+<script src="../assets/js/topbar.js"></script>
+<script>initDB().then(() => injectTopbar('services'));</script>
+
 </body>
 </html>
