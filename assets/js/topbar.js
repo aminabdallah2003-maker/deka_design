@@ -69,8 +69,7 @@ function buildTopbar(activePage = '') {
 
       <div style="display:flex; align-items:center; gap:1rem;">
         <div class="theme-toggle">
-          <button id="themeToggleBtn" title="Changer de thème" onclick="toggleTheme()">
-            <i class="fas fa-moon"></i>
+         
           </button>
         </div>
         ${userHTML}
